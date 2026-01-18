@@ -15,13 +15,11 @@ nix flake check      # Run all checks (clippy, tests, fmt, audit, deny)
 nix fmt              # Format code (Rust and Nix files)
 ```
 
-## Checks (via `nix flake check`)
+## Code Architecture
 
-- **my-crate**: Build the crate
-- **my-crate-clippy**: Clippy with `--deny warnings`
-- **my-crate-nextest**: Tests via cargo-nextest
-- **my-crate-fmt**: Rust formatting
-- **my-crate-toml-fmt**: TOML formatting via taplo
-- **my-crate-audit**: Security audit against advisory-db
-- **my-crate-deny**: License checking (MIT only)
-- **my-crate-doc**: Documentation with `--deny warnings`
+Each module demonstrates a different memory safety issue caused by `mem::forget`:
+
+- **drain** (`src/drain.rs`): Shows use-after-free when `Drain` iterator is forgotten mid-iteration, leaving dangling pointers to deallocated `Box` data
+- **rc** (`src/rc.rs`): Custom `Rc<T>` implementation with intentionally small `u8` ref_count to demonstrate:
+  - Memory leak: forgotten clones inflate ref_count, preventing deallocation
+  - Use-after-free: 255 forgotten clones overflow ref_count back to 0, causing premature deallocation
