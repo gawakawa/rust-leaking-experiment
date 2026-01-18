@@ -148,7 +148,7 @@
 
           apps.default = {
             type = "app";
-            program = "${my-crate}/bin/quick-start";
+            program = "${my-crate}/bin/rust-leaking-experiment";
           };
 
           pre-commit.settings.hooks = {

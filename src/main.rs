@@ -1,3 +1,5 @@
+use rust_leaking_experiment::drain_leak;
+
 fn main() {
-    println!("Hello, world!");
+    drain_leak();
 }
